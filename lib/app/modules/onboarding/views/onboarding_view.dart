@@ -120,7 +120,7 @@ class OnboardingView extends GetView<OnboardingController> {
             right: 30,
             child: GestureDetector(
               onTap: () {
-                Get.offAllNamed('/home');
+                Get.offAllNamed('/login');
               },
               child: const Text(
                 "Lewati",
@@ -171,7 +171,7 @@ class OnboardingView extends GetView<OnboardingController> {
                   );
                 } else {
                   // Jika sudah sampai halaman terakhir
-                  Get.offAllNamed('/home');
+                  Get.offAllNamed('/login');
                 }
               },
               child: const Icon(
