@@ -1,23 +1,52 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
-  //TODO: Implement LoginController
+  // Form key untuk validasi form
+  final formKey = GlobalKey<FormState>();
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  // TextEditingController untuk input email dan kata sandi
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  // Obx variable untuk menyimpan state
+  var rememberMe = false.obs;
+  var isPasswordHidden = true.obs; // Status untuk obsecure password
+
+  // Validasi email
+  String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email tidak boleh kosong';
+    }
+    // Regex untuk validasi format email
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      return 'Masukkan email yang valid';
+    }
+    return null;
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  // Validasi password
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Kata sandi tidak boleh kosong';
+    }
+    if (value.length < 6) {
+      return 'Kata sandi minimal 6 karakter';
+    }
+    return null;
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  // Aksi login
+  void login() {
+    if (formKey.currentState!.validate()) {
+      // Aksi ketika form valid
+      Get.snackbar('Login Berhasil', 'Anda berhasil masuk',
+          snackPosition: SnackPosition.TOP);
+    }
   }
 
-  void increment() => count.value++;
+  // Toggle untuk menyembunyikan/menampilkan password
+  void togglePasswordVisibility() {
+    isPasswordHidden.value = !isPasswordHidden.value;
+  }
 }

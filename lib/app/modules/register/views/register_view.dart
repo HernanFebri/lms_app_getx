@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../widgets/waveclipper_widget.dart';
-import '../controllers/login_controller.dart';
+import '../controllers/register_controller.dart';
 
-class LoginView extends GetView<LoginController> {
-  const LoginView({super.key});
+class RegisterView extends GetView<RegisterController> {
+  const RegisterView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +12,10 @@ class LoginView extends GetView<LoginController> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Stack(
               children: [
+                // Header dengan background warna kuning
                 ClipPath(
                   clipper: WaveClipper(),
                   child: Container(
@@ -30,6 +30,28 @@ class LoginView extends GetView<LoginController> {
                     ),
                   ),
                 ),
+                Positioned(
+                  top: 40,
+                  left: 20,
+                  right: 20,
+                  child: Column(
+                    children: [
+                      // Tombol kembali
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            size: 32,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
             const Padding(
@@ -37,7 +59,7 @@ class LoginView extends GetView<LoginController> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  'Masuk',
+                  'Daftar',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -47,11 +69,26 @@ class LoginView extends GetView<LoginController> {
               ),
             ),
             const SizedBox(height: 20),
+            // Form untuk nama lengkap, email, kata sandi, konfirmasi kata sandi
             Form(
               key: controller.formKey,
               child: Column(
                 children: [
-                  // Input Email
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: TextFormField(
+                      controller: controller.nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Nama Lengkap',
+                        hintText: 'Masukkan Nama Lengkap',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: controller.validateName,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: TextFormField(
@@ -67,7 +104,6 @@ class LoginView extends GetView<LoginController> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Input Kata Sandi
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: Obx(() => TextFormField(
@@ -79,7 +115,6 @@ class LoginView extends GetView<LoginController> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            // Ikon untuk toggle visibility
                             suffixIcon: IconButton(
                               icon: Icon(
                                 controller.isPasswordHidden.value
@@ -92,40 +127,55 @@ class LoginView extends GetView<LoginController> {
                           validator: controller.validatePassword,
                         )),
                   ),
-                  const SizedBox(height: 5),
-                  // Checkbox "Simpan kata sandi" dan "Lupa kata sandi?"
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: Obx(() => TextFormField(
+                          controller: controller.confirmPasswordController,
+                          obscureText: controller.isPasswordHidden.value,
+                          decoration: InputDecoration(
+                            labelText: 'Konfirmasi Kata Sandi',
+                            hintText: 'Konfirmasi Kata Sandi',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                controller.isPasswordHidden.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: controller.togglePasswordVisibility,
+                            ),
+                          ),
+                          validator: controller.validateConfirmPassword,
+                        )),
+                  ),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Obx(() => Checkbox(
-                                  value: controller.rememberMe.value,
-                                  onChanged: (bool? value) {
-                                    controller.rememberMe.value = value!;
-                                  },
-                                )),
-                            const Text('Simpan kata sandi'),
-                          ],
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Lupa kata sandi?',
-                            style: TextStyle(color: Colors.yellow),
+                        Obx(() => Checkbox(
+                              value: controller.agreeTerms.value,
+                              onChanged: (bool? value) {
+                                controller.agreeTerms.value = value!;
+                              },
+                            )),
+                        const Flexible(
+                          child: Text(
+                            'Saya telah membaca dan setuju dengan persyaratan layanan dan polisi privasi kami',
                           ),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Tombol Masuk
+                  // Tombol Daftar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: ElevatedButton(
-                      onPressed: controller.login,
+                      onPressed: controller.register,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow,
                         minimumSize: const Size(double.infinity, 50),
@@ -134,29 +184,10 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                       child: const Text(
-                        'Masuk',
+                        'Daftar',
                         style: TextStyle(color: Colors.black, fontSize: 18),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  // Text "Belum punya akun?" dan "Daftar"
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Belum punya akun?'),
-                      TextButton(
-                        onPressed: () {
-                          Get.toNamed('/register');
-                        },
-                        child: const Text(
-                          'Daftar',
-                          style: TextStyle(
-                              color: Colors.yellow,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
                   ),
                 ],
               ),
