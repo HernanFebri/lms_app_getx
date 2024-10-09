@@ -42,6 +42,9 @@ class LoginController extends GetxController {
       // Aksi ketika form valid
       Get.snackbar('Login Berhasil', 'Anda berhasil masuk',
           snackPosition: SnackPosition.TOP);
+
+      // Navigasi ke halaman beranda setelah login berhasil
+      Get.toNamed('/home'); // Pastikan Anda sudah mendefinisikan rute ini
     }
   }
 

@@ -17,7 +17,8 @@ class LoginView extends GetView<LoginController> {
             Stack(
               children: [
                 ClipPath(
-                  clipper: WaveClipper(),
+                  clipper:
+                      WaveClipper(), // Menambahkan ClipPath dengan WaveClipper
                   child: Container(
                     height: 350,
                     color: Colors.yellow,
@@ -147,7 +148,8 @@ class LoginView extends GetView<LoginController> {
                       const Text('Belum punya akun?'),
                       TextButton(
                         onPressed: () {
-                          Get.toNamed('/register');
+                          Get.toNamed(
+                              '/register'); // Rute untuk halaman pendaftaran
                         },
                         child: const Text(
                           'Daftar',
