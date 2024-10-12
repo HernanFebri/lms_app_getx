@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lms_app_getx/app/utils/app_color.dart';
-import '../../../widgets/course_card_widget.dart'; // Pastikan jalur ini benar
-import '../controllers/beranda_controller.dart'; // Pastikan jalur ini benar
+import '../../../widgets/course_card_widget.dart';
+import '../controllers/beranda_controller.dart';
 
 class BerandaView extends StatelessWidget {
   const BerandaView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Get.put(BerandaController());
+    final BerandaController berandaController = Get.put(BerandaController());
 
     // Mendapatkan tinggi layar
     final screenHeight = MediaQuery.of(context).size.height;
@@ -26,27 +26,25 @@ class BerandaView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
-            color: AppColors.primary, // Ganti warna sesuai keinginan
-            borderRadius:
-                BorderRadius.circular(18.0), // Opsional: Radius untuk sudut
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(18.0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               const Text(
                 'Hai, Hernan Febri',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Ubah warna teks agar kontras
+                  color: Colors.black,
                 ),
               ),
               const SizedBox(height: 10),
               // Search Bar
               TextField(
+                controller: berandaController.searchController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -88,46 +86,24 @@ class BerandaView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: SizedBox(
-            height: screenHeight -
-                headerHeight -
-                bottomPadding, // Sesuaikan tinggi ListView
-            child: ListView.builder(
-              physics:
-                  const BouncingScrollPhysics(), // Agar kursus saja yang bisa di-scroll
-              itemCount: 6, // Jumlah card yang ditampilkan
-              itemBuilder: (context, index) {
-                // Gunakan card yang telah diperbarui
-                return Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 16.0), // Jarak antar card
-                  child: MyCourseCard(
-                    title: index == 0
-                        ? 'Become Profesional UI/UX'
-                        : index == 1
-                            ? '3D Designer'
-                            : index == 2
-                                ? 'Web Developer'
-                                : index == 3
-                                    ? 'Digital Marketing'
-                                    : index == 4
-                                        ? 'Flutter Development'
-                                        : 'Data Science',
-                    price: index == 2
-                        ? 'Rp 150.000'
-                        : index == 4
-                            ? 'Rp 250.000'
-                            : 'Rp 100.000',
-                    rating: index == 3
-                        ? 4.7
-                        : index == 4
-                            ? 4.8
-                            : 4.3,
-                    imageUrl: 'assets/images/course.png',
-                    meetings: '12 x Pertemuan',
-                  ),
-                );
-              },
-            ),
+            height: screenHeight - headerHeight - bottomPadding,
+            child: Obx(() => ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: berandaController.filteredCourses.length,
+                  itemBuilder: (context, index) {
+                    final course = berandaController.filteredCourses[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: MyCourseCard(
+                        title: course['title'],
+                        price: course['price'],
+                        rating: course['rating'],
+                        imageUrl: course['imageUrl'],
+                        meetings: course['meetings'],
+                      ),
+                    );
+                  },
+                )),
           ),
         ),
       ],
