@@ -15,41 +15,72 @@ class ProfileView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header dengan warna latar belakang
+            // Container untuk space dan warna latar belakang
             Container(
-              margin: const EdgeInsets.only(top: 25),
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: AppColors.primary, // Ganti warna sesuai keinginan
-                borderRadius: BorderRadius.circular(18.0), // Radius untuk sudut
+              height: 40, // Mengatur tinggi untuk space
+              color: AppColors.primary, // Mengatur warna menjadi primary
+            ),
+            // Header dengan warna latar belakang dan border bawah
+            Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 16.0), // Mengurangi padding vertikal
+              decoration: const BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(32.0),
+                  bottomRight: Radius.circular(32.0),
+                ),
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors
+                        .white, // Ganti dengan warna border sesuai keinginan
+                    width: 2, // Ketebalan border
+                  ),
+                ),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
                   Row(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 40,
                         backgroundColor: AppColors.background,
                         backgroundImage: AssetImage(
-                            'assets/images/profile.png'), // Ganti dengan gambar profil Anda
+                          'assets/images/profile.png',
+                        ), // Ganti dengan gambar profil Anda
                       ),
-                      SizedBox(width: 20),
-                      Text(
-                        'Hai, Hernan Febri',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black, // Ubah warna teks agar kontras
-                        ),
+                      const SizedBox(width: 15), // Mengurangi ukuran spacing
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Hai,',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Obx(() => Text(
+                                profileController.fullName.value,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              )),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(
+                height: 10), // Mengurangi jarak antara header dan ListTile
             ListTile(
               title: const Text(
                 'Pengaturan Akun',
@@ -92,8 +123,34 @@ class ProfileView extends StatelessWidget {
                     title: const Text('Keluar'),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
-                      profileController
-                          .logout(); // Memanggil fungsi logout saat tombol "Keluar" ditekan
+                      // Menampilkan dialog konfirmasi
+                      Get.defaultDialog(
+                        title: 'Konfirmasi',
+                        middleText: 'Apakah Anda yakin ingin keluar?',
+                        confirm: TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                AppColors.primary, // Warna teks tombol
+                          ),
+                          onPressed: () {
+                            profileController
+                                .logout(); // Memanggil fungsi logout
+                            Get.back(); // Menutup dialog setelah logout
+                          },
+                          child: const Text('Ya'),
+                        ),
+                        cancel: TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppColors
+                                .primary, // Warna teks tombol untuk pembatalan
+                          ),
+                          onPressed: () {
+                            Get.back(); // Menutup dialog
+                          },
+                          child: const Text('Tidak'),
+                        ),
+                      );
                     },
                   ),
                 ],

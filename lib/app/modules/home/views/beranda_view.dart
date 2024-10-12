@@ -33,14 +33,15 @@ class BerandaView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 20),
-              const Text(
-                'Hai, Hernan Febri',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
+              Obx(() => Text(
+                    'Hai, ${berandaController.userName.value}', // Menggunakan nama dari Firebase
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  )),
+
               const SizedBox(height: 10),
               // Search Bar
               TextField(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lms_app_getx/app/utils/app_color.dart';
 import '../../../widgets/waveclipper_widget.dart';
 import '../controllers/register_controller.dart';
 
@@ -68,7 +69,7 @@ class RegisterView extends GetView<RegisterController> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             // Form untuk nama lengkap, email, kata sandi, konfirmasi kata sandi
             Form(
               key: controller.formKey,
@@ -158,6 +159,7 @@ class RegisterView extends GetView<RegisterController> {
                       children: [
                         Obx(() => Checkbox(
                               value: controller.agreeTerms.value,
+                              activeColor: AppColors.primary,
                               onChanged: (bool? value) {
                                 controller.agreeTerms.value = value!;
                               },
@@ -192,6 +194,8 @@ class RegisterView extends GetView<RegisterController> {
                       ),
                     ),
                   ),
+                  const SizedBox(
+                      height: 30), // Menambahkan space di bawah tombol
                 ],
               ),
             ),

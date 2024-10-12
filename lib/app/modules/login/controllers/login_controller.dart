@@ -12,8 +12,24 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController();
 
   // Obx variable untuk menyimpan state
-  var rememberMe = false.obs;
+  var rememberMe = false.obs; // Status untuk menyimpan email dan kata sandi
   var isPasswordHidden = true.obs; // Status untuk obsecure password
+
+  // Inisialisasi controller
+  @override
+  void onInit() {
+    super.onInit();
+    loadCredentials(); // Memuat kredensial jika tersedia
+  }
+
+  // Memuat kredensial dari SharedPreferences
+  Future<void> loadCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    emailController.text = prefs.getString('savedEmail') ?? '';
+    passwordController.text = prefs.getString('savedPassword') ?? '';
+    rememberMe.value =
+        prefs.getBool('rememberMe') ?? false; // Muat status checkbox
+  }
 
   // Validasi email
   String? validateEmail(String? value) {
@@ -43,16 +59,37 @@ class LoginController extends GetxController {
     if (formKey.currentState!.validate()) {
       try {
         // Melakukan autentikasi menggunakan Firebase
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
 
+        // Memeriksa apakah email sudah diverifikasi
+        if (userCredential.user != null &&
+            !userCredential.user!.emailVerified) {
+          Get.snackbar(
+              'Peringatan', 'Silakan verifikasi email Anda terlebih dahulu.',
+              snackPosition: SnackPosition.TOP);
+          return; // Keluar dari fungsi jika email belum diverifikasi
+        }
+
         // Simpan status login di SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
-        await prefs.setBool(
-            'hasUsedApp', true); // Tandai bahwa aplikasi telah digunakan
+
+        // Simpan email dan kata sandi jika checkbox diaktifkan
+        if (rememberMe.value) {
+          await prefs.setString('savedEmail', emailController.text.trim());
+          await prefs.setString(
+              'savedPassword', passwordController.text.trim());
+          await prefs.setBool('rememberMe', true);
+        } else {
+          // Hapus email dan kata sandi dari SharedPreferences jika tidak diingat
+          await prefs.remove('savedEmail');
+          await prefs.remove('savedPassword');
+          await prefs.setBool('rememberMe', false);
+        }
 
         // Aksi ketika form valid
         Get.snackbar('Login Berhasil', 'Anda berhasil masuk',
@@ -77,6 +114,18 @@ class LoginController extends GetxController {
             snackPosition: SnackPosition.TOP);
       }
     }
+  }
+
+  // Aksi logout
+  Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('savedEmail'); // Hapus email
+    await prefs.remove('savedPassword'); // Hapus password
+    await prefs.setBool('isLoggedIn', false); // Atur status logout
+
+    // Navigasi kembali ke halaman login
+    Get.offNamed('/login');
   }
 
   // Toggle untuk menyembunyikan/menampilkan password

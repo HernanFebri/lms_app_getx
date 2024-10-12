@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BerandaController extends GetxController {
   // TextEditingController untuk search bar
@@ -54,16 +56,35 @@ class BerandaController extends GetxController {
   // List untuk menyimpan hasil filter (dengan Rx)
   var filteredCourses = <Map<String, dynamic>>[].obs;
 
+  // Variable untuk menyimpan nama pengguna
+  var userName = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
     searchController = TextEditingController();
+
+    // Ambil nama pengguna dari Firebase
+    fetchUserName();
 
     // Awalnya, tampilkan semua kursus
     filteredCourses.value = courses;
 
     // Menambahkan listener untuk mendeteksi perubahan pada search bar
     searchController.addListener(_filterCourses);
+  }
+
+  // Fungsi untuk mengambil nama pengguna dari Firebase
+  void fetchUserName() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      userName.value = userDoc.data()?['name'] ??
+          'Pengguna'; // Ganti 'name' dengan nama field yang benar
+    }
   }
 
   // Fungsi untuk memfilter kursus

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lms_app_getx/app/utils/app_color.dart';
 import '../../../widgets/waveclipper_widget.dart';
 import '../controllers/login_controller.dart';
 
@@ -47,7 +48,7 @@ class LoginView extends GetView<LoginController> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Form(
               key: controller.formKey,
               child: Column(
@@ -102,12 +103,15 @@ class LoginView extends GetView<LoginController> {
                       children: [
                         Row(
                           children: [
-                            Obx(() => Checkbox(
-                                  value: controller.rememberMe.value,
-                                  onChanged: (bool? value) {
-                                    controller.rememberMe.value = value!;
-                                  },
-                                )),
+                            Obx(
+                              () => Checkbox(
+                                value: controller.rememberMe.value,
+                                activeColor: AppColors.primary,
+                                onChanged: (bool? value) {
+                                  controller.rememberMe.value = value!;
+                                },
+                              ),
+                            ),
                             const Text('Simpan kata sandi'),
                           ],
                         ),
@@ -123,7 +127,7 @@ class LoginView extends GetView<LoginController> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   // Tombol Masuk
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),

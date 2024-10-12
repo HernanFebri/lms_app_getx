@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 class RegisterController extends GetxController {
   // Controllers untuk form input
@@ -83,6 +84,15 @@ class RegisterController extends GetxController {
         // Mengirimkan email verifikasi
         await userCredential.user?.sendEmailVerification();
 
+        // Menyimpan nama lengkap dan informasi pengguna lainnya ke Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user?.uid)
+            .set({
+          'name': nameController.text, // Simpan nama lengkap
+          'email': emailController.text, // Simpan email
+        });
+
         // Mengosongkan semua controller setelah pendaftaran berhasil
         nameController.clear();
         emailController.clear();
@@ -90,6 +100,7 @@ class RegisterController extends GetxController {
         confirmPasswordController.clear();
         agreeTerms.value = false; // Reset checkbox
 
+        // Menampilkan snackbar untuk memberi tahu bahwa pendaftaran berhasil
         Get.snackbar('Sukses',
             'Registrasi berhasil! Silakan cek email Anda untuk verifikasi.',
             snackPosition: SnackPosition.TOP);
@@ -97,6 +108,11 @@ class RegisterController extends GetxController {
         // Menangani error pendaftaran
         Get.snackbar(
             'Error', e.message ?? 'Terjadi kesalahan. Silakan coba lagi.',
+            snackPosition: SnackPosition.TOP);
+      } catch (e) {
+        // Menangani error lain
+        print('Terjadi kesalahan: $e'); // Tambahkan print untuk debugging
+        Get.snackbar('Error', 'Terjadi kesalahan tidak terduga: $e',
             snackPosition: SnackPosition.TOP);
       }
     }
