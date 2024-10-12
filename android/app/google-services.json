@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "653627743664",
+    "project_id": "gencer-lms",
+    "storage_bucket": "gencer-lms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653627743664:android:bfd23d2eadc177253d8a75",
+        "android_client_info": {
+          "package_name": "com.example.lms_app_getx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0gLzSGWOh2sVJCXjD59IKchOMO-8u19A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

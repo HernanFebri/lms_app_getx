@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterController extends GetxController {
   // Controllers untuk form input
@@ -65,7 +66,7 @@ class RegisterController extends GetxController {
   }
 
   // Fungsi untuk melakukan register
-  void register() {
+  Future<void> register() async {
     if (!agreeTerms.value) {
       Get.snackbar('Peringatan', 'Anda harus setuju dengan persyaratan kami',
           snackPosition: SnackPosition.TOP);
@@ -73,9 +74,31 @@ class RegisterController extends GetxController {
     }
 
     if (formKey.currentState!.validate()) {
-      // Proses register di sini (misalnya kirim data ke server)
-      Get.snackbar('Sukses', 'Registrasi berhasil!',
-          snackPosition: SnackPosition.TOP);
+      try {
+        // Mendaftar pengguna baru menggunakan Firebase Auth
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: emailController.text, password: passwordController.text);
+
+        // Mengirimkan email verifikasi
+        await userCredential.user?.sendEmailVerification();
+
+        // Mengosongkan semua controller setelah pendaftaran berhasil
+        nameController.clear();
+        emailController.clear();
+        passwordController.clear();
+        confirmPasswordController.clear();
+        agreeTerms.value = false; // Reset checkbox
+
+        Get.snackbar('Sukses',
+            'Registrasi berhasil! Silakan cek email Anda untuk verifikasi.',
+            snackPosition: SnackPosition.TOP);
+      } on FirebaseAuthException catch (e) {
+        // Menangani error pendaftaran
+        Get.snackbar(
+            'Error', e.message ?? 'Terjadi kesalahan. Silakan coba lagi.',
+            snackPosition: SnackPosition.TOP);
+      }
     }
   }
 

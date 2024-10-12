@@ -175,7 +175,10 @@ class RegisterView extends GetView<RegisterController> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: ElevatedButton(
-                      onPressed: controller.register,
+                      onPressed: () {
+                        // Memanggil fungsi register dari controller
+                        controller.register();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow,
                         minimumSize: const Size(double.infinity, 50),

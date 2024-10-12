@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:lms_app_getx/app/utils/app_color.dart';
+import 'package:get/get.dart';
+import '../controllers/profile_controller.dart'; // Import ProfileController
 
 class ProfileView extends StatelessWidget {
   const ProfileView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ProfileController profileController =
+        Get.put(ProfileController()); // Menginisialisasi ProfileController
+
     return Scaffold(
       body: SingleChildScrollView(
-        // Menambahkan SingleChildScrollView untuk membuat tampilan dapat di-scroll
         child: Column(
           children: [
             // Header dengan warna latar belakang
@@ -87,7 +91,10 @@ class ProfileView extends StatelessWidget {
                   ListTile(
                     title: const Text('Keluar'),
                     trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () {},
+                    onTap: () {
+                      profileController
+                          .logout(); // Memanggil fungsi logout saat tombol "Keluar" ditekan
+                    },
                   ),
                 ],
               ),

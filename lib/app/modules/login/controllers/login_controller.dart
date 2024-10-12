@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
 class LoginController extends GetxController {
   // Form key untuk validasi form
@@ -37,14 +39,31 @@ class LoginController extends GetxController {
   }
 
   // Aksi login
-  void login() {
+  Future<void> login() async {
     if (formKey.currentState!.validate()) {
-      // Aksi ketika form valid
-      Get.snackbar('Login Berhasil', 'Anda berhasil masuk',
-          snackPosition: SnackPosition.TOP);
+      try {
+        // Melakukan autentikasi menggunakan Firebase
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
 
-      // Navigasi ke halaman beranda setelah login berhasil
-      Get.toNamed('/home'); // Pastikan Anda sudah mendefinisikan rute ini
+        // Simpan status login di SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setBool(
+            'hasUsedApp', true); // Tandai bahwa aplikasi telah digunakan
+
+        // Aksi ketika form valid
+        Get.snackbar('Login Berhasil', 'Anda berhasil masuk',
+            snackPosition: SnackPosition.TOP);
+
+        // Navigasi ke halaman beranda setelah login berhasil
+        Get.offNamed('/home'); // Ganti Get.toNamed dengan Get.offNamed
+      } catch (e) {
+        Get.snackbar('Login Gagal', e.toString(),
+            snackPosition: SnackPosition.TOP);
+      }
     }
   }
 

@@ -112,7 +112,9 @@ class LoginView extends GetView<LoginController> {
                           ],
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            // Tambahkan aksi untuk lupa kata sandi di sini
+                          },
                           child: const Text(
                             'Lupa kata sandi?',
                             style: TextStyle(color: Colors.yellow),
