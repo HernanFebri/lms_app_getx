@@ -60,6 +60,18 @@ class LoginController extends GetxController {
 
         // Navigasi ke halaman beranda setelah login berhasil
         Get.offNamed('/home'); // Ganti Get.toNamed dengan Get.offNamed
+      } on FirebaseAuthException catch (e) {
+        // Menangani kesalahan autentikasi
+        if (e.code == 'user-not-found') {
+          Get.snackbar('Login Gagal', 'Pengguna tidak ditemukan.',
+              snackPosition: SnackPosition.TOP);
+        } else if (e.code == 'wrong-password') {
+          Get.snackbar('Login Gagal', 'Kata sandi yang Anda masukkan salah.',
+              snackPosition: SnackPosition.TOP);
+        } else {
+          Get.snackbar('Login Gagal', 'Terjadi kesalahan, silakan coba lagi.',
+              snackPosition: SnackPosition.TOP);
+        }
       } catch (e) {
         Get.snackbar('Login Gagal', e.toString(),
             snackPosition: SnackPosition.TOP);
