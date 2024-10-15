@@ -43,6 +43,8 @@ class ProfileView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.center, // Center alignment
                     children: [
                       const CircleAvatar(
                         radius: 40,
@@ -52,27 +54,31 @@ class ProfileView extends StatelessWidget {
                         ), // Ganti dengan gambar profil Anda
                       ),
                       const SizedBox(width: 15), // Mengurangi ukuran spacing
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Hai,',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                      // Flexible untuk menghindari overflow
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Obx(() => Text(
+                                  profileController.fullName.value,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                  softWrap: true, // Mengizinkan teks wrap
+                                )),
+                            // Fullname tanpa overflow handling agar turun ke baris berikutnya
+                            const Text(
+                              'Mentee',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Obx(() => Text(
-                                profileController.fullName.value,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              )),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

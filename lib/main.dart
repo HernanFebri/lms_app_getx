@@ -14,6 +14,11 @@ void main() async {
   final hasUsedApp = prefs.getBool('hasUsedApp') ??
       false; // Cek apakah aplikasi sudah digunakan sebelumnya
 
+  // Jika belum pernah menggunakan aplikasi, set status penggunaan menjadi true
+  if (!hasUsedApp) {
+    await prefs.setBool('hasUsedApp', true);
+  }
+
   runApp(
     GetMaterialApp(
       theme: ThemeData(useMaterial3: false),
@@ -22,7 +27,7 @@ void main() async {
           ? '/home' // Jika sudah login, arahkan ke halaman home
           : hasUsedApp
               ? AppPages
-                  .INITIAL // Jika belum login dan sudah pernah menggunakan aplikasi, arahkan ke halaman login
+                  .INITIAL // Jika belum login tapi sudah menggunakan aplikasi, arahkan ke halaman login
               : '/splash', // Jika belum pernah menggunakan aplikasi, arahkan ke halaman splash
       getPages: AppPages.routes,
     ),

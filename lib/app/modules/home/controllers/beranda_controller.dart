@@ -10,46 +10,46 @@ class BerandaController extends GetxController {
   // Daftar kursus
   final List<Map<String, dynamic>> courses = [
     {
-      'title': 'Become Profesional UI/UX',
+      'title': 'Become Professional UI/UX',
       'price': 'Rp 100.000',
       'rating': 4.3,
       'imageUrl': 'assets/images/course.png',
-      'meetings': '12 x Pertemuan'
+      'meetings': '12 x Pertemuan',
     },
     {
       'title': '3D Designer',
       'price': 'Rp 100.000',
       'rating': 4.3,
       'imageUrl': 'assets/images/course.png',
-      'meetings': '12 x Pertemuan'
+      'meetings': '12 x Pertemuan',
     },
     {
       'title': 'Web Developer',
       'price': 'Rp 150.000',
       'rating': 4.3,
       'imageUrl': 'assets/images/course.png',
-      'meetings': '12 x Pertemuan'
+      'meetings': '12 x Pertemuan',
     },
     {
       'title': 'Digital Marketing',
       'price': 'Rp 100.000',
       'rating': 4.7,
       'imageUrl': 'assets/images/course.png',
-      'meetings': '12 x Pertemuan'
+      'meetings': '12 x Pertemuan',
     },
     {
       'title': 'Flutter Development',
       'price': 'Rp 250.000',
       'rating': 4.8,
       'imageUrl': 'assets/images/course.png',
-      'meetings': '12 x Pertemuan'
+      'meetings': '12 x Pertemuan',
     },
     {
       'title': 'Data Science',
       'price': 'Rp 100.000',
       'rating': 4.3,
       'imageUrl': 'assets/images/course.png',
-      'meetings': '12 x Pertemuan'
+      'meetings': '12 x Pertemuan',
     },
   ];
 
@@ -90,9 +90,14 @@ class BerandaController extends GetxController {
   // Fungsi untuk memfilter kursus
   void _filterCourses() {
     String query = searchController.text.toLowerCase();
-    filteredCourses.value = courses.where((course) {
-      return course['title'].toLowerCase().contains(query);
-    }).toList();
+    if (query.isEmpty) {
+      // Jika query kosong, kembalikan semua kursus
+      filteredCourses.value = courses;
+    } else {
+      filteredCourses.value = courses.where((course) {
+        return course['title'].toLowerCase().contains(query);
+      }).toList();
+    }
   }
 
   @override

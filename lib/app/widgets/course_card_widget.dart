@@ -32,8 +32,8 @@ class MyCourseCard extends StatelessWidget {
                 const BorderRadius.horizontal(left: Radius.circular(15.0)),
             child: Image.asset(
               imageUrl,
-              height: 100,
-              width: 100,
+              height: 120, // Adjust height to fit your UI design
+              width: 120, // Adjust width to fit your UI design
               fit: BoxFit.cover,
             ),
           ),
@@ -46,26 +46,40 @@ class MyCourseCard extends StatelessWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   const SizedBox(height: 8),
+                  // Conditional rendering for price and meetings
                   if (price != null)
                     Text(
                       price!,
                       style: const TextStyle(
-                          fontSize: 14, color: AppColors.primary),
+                        fontSize: 14,
+                        color: AppColors.primary,
+                      ),
                     ),
                   if (meetings != null)
                     Text(
                       meetings!,
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
                     ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 8),
+                  // Rating display
                   if (rating != null)
                     Row(
                       children: [
                         const Icon(Icons.star, size: 16, color: Colors.yellow),
-                        Text('$rating', style: const TextStyle(fontSize: 12)),
+                        const SizedBox(
+                            width: 4), // Add space between star and rating
+                        Text(
+                          '$rating',
+                          style: const TextStyle(fontSize: 12),
+                        ),
                       ],
                     ),
                 ],

@@ -96,6 +96,7 @@ class LoginView extends GetView<LoginController> {
                   ),
                   const SizedBox(height: 5),
                   // Checkbox "Simpan kata sandi" dan "Lupa kata sandi?"
+                  // Checkbox "Simpan kata sandi" dan "Lupa kata sandi?"
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: Row(
@@ -115,18 +116,24 @@ class LoginView extends GetView<LoginController> {
                             const Text('Simpan kata sandi'),
                           ],
                         ),
-                        TextButton(
-                          onPressed: () {
-                            // Tambahkan aksi untuk lupa kata sandi di sini
-                          },
-                          child: const Text(
-                            'Lupa kata sandi?',
-                            style: TextStyle(color: Colors.yellow),
+                        Flexible(
+                          // Tambahkan Flexible untuk membatasi teks
+                          child: TextButton(
+                            onPressed: () {
+                              // Tambahkan aksi untuk lupa kata sandi di sini
+                            },
+                            child: const Text(
+                              'Lupa kata sandi?',
+                              style: TextStyle(color: Colors.yellow),
+                              overflow: TextOverflow
+                                  .ellipsis, // Tambahkan overflow ellipsis
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 10),
                   // Tombol Masuk
                   Padding(

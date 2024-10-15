@@ -11,90 +11,81 @@ class BerandaView extends StatelessWidget {
   Widget build(BuildContext context) {
     final BerandaController berandaController = Get.put(BerandaController());
 
-    // Mendapatkan tinggi layar
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    // Tentukan tinggi elemen yang ada di atas ListView.builder
-    final headerHeight =
-        200.0; // Estimasi tinggi header, search bar, dan section title
-    final bottomPadding =
-        80.0; // Tambahkan padding untuk jarak dari bagian bawah (ikon beranda)
-
-    return ListView(
-      children: [
-        // Header dengan warna latar belakang
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(18.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Obx(() => Text(
-                    'Hai, ${berandaController.userName.value}', // Menggunakan nama dari Firebase
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
+    return Scaffold(
+      body: Column(
+        children: [
+          // Static Header with Fullname and Search Bar
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(32),
+                bottomLeft: Radius.circular(32),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 40),
+                Obx(() => Text(
+                      'Hai, ${berandaController.userName.value}', // Menggunakan nama dari Firebase
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    )),
+                const SizedBox(height: 10),
+                // Search Bar
+                TextField(
+                  controller: berandaController.searchController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: 'Mau belajar apa hari ini?',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide.none,
                     ),
-                  )),
-
-              const SizedBox(height: 10),
-              // Search Bar
-              TextField(
-                controller: berandaController.searchController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  prefixIcon: const Icon(Icons.search),
-                  hintText: 'Mau belajar apa hari ini?',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide.none,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        // Ikuti Kursus Section
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Ikuti Kursus',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+          const SizedBox(height: 20), // Space between header and course list
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Ikuti Kursus',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Action to view all courses
+                  },
+                  child: const Text(
+                    'Lihat semua',
+                    style: TextStyle(color: AppColors.primary),
+                  ),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                // View All action
-              },
-              child: const Text(
-                'Lihat semua',
-                style: TextStyle(color: AppColors.primary),
-              ),
-            ),
-          ],
-        ),
-        // Scrollable Vertical List for Courses
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SizedBox(
-            height: screenHeight - headerHeight - bottomPadding,
+          ),
+          // Scrollable Vertical List for Courses
+          Expanded(
             child: Obx(() => ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   itemCount: berandaController.filteredCourses.length,
                   itemBuilder: (context, index) {
                     final course = berandaController.filteredCourses[index];
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16.0, bottom: 16.0),
                       child: MyCourseCard(
                         title: course['title'],
                         price: course['price'],
@@ -106,8 +97,8 @@ class BerandaView extends StatelessWidget {
                   },
                 )),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
